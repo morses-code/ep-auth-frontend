@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 type AuthContextValue = {
   isAuthenticated: boolean;
@@ -51,32 +57,18 @@ const isTokenExpired = (token: string) => {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setTokenState] = useState<string | null>(() => {
-    const savedToken = localStorage.getItem("authToken");
+  const [token, setTokenState] = useState<string | null>(null);
 
-    if (!savedToken) {
-      return null;
-    }
-
-    if (isTokenExpired(savedToken)) {
-      localStorage.removeItem("authToken");
-      return null;
-    }
-
-    return savedToken;
-  });
+  useEffect(() => {
+    localStorage.removeItem("authToken");
+  }, []);
 
   const setToken = (value: string | null) => {
     if (value) {
       if (isTokenExpired(value)) {
-        localStorage.removeItem("authToken");
         setTokenState(null);
         return;
       }
-
-      localStorage.setItem("authToken", value);
-    } else {
-      localStorage.removeItem("authToken");
     }
 
     setTokenState(value);
