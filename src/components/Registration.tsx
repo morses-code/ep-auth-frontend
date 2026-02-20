@@ -74,7 +74,10 @@ const parseResponseBody = async (response: Response) => {
   }
 };
 
-const postJson = async (path: string, payload: object): Promise<ApiResponse> => {
+const postJson = async (
+  path: string,
+  payload: object,
+): Promise<ApiResponse> => {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
     headers: {
@@ -216,7 +219,6 @@ const Registration = () => {
 
       const registrationToken = extractToken(registerResult.data);
       if (registrationToken) {
-        console.log("Auth token from registration:", registrationToken);
         setPostAuthSuccessMessage(completeRegistrationMessage);
         setToken(registrationToken);
         return;
@@ -234,7 +236,6 @@ const Registration = () => {
         );
         console.error("Login failed after registration", {
           status: loginResult.status,
-          responseBody: loginResult.data,
         });
         openSnackBar(
           `${loginErrorMessage} (status ${loginResult.status})`,
@@ -253,8 +254,7 @@ const Registration = () => {
         return;
       }
 
-      console.log("Auth token:", token);
-  setPostAuthSuccessMessage(completeRegistrationMessage);
+      setPostAuthSuccessMessage(completeRegistrationMessage);
       setToken(token);
     } catch (error) {
       console.error("Registration/login request failed:", error);

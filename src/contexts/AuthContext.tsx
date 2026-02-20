@@ -28,7 +28,10 @@ const getTokenExpiryTime = (token: string) => {
 
     const decodedPayload = JSON.parse(atob(payload)) as { exp?: number };
 
-    if (typeof decodedPayload.exp !== "number") {
+    if (
+      typeof decodedPayload.exp !== "number" ||
+      !Number.isFinite(decodedPayload.exp)
+    ) {
       return null;
     }
 
@@ -40,8 +43,8 @@ const getTokenExpiryTime = (token: string) => {
 
 const isTokenExpired = (token: string) => {
   const expiryTime = getTokenExpiryTime(token);
-  if (!expiryTime) {
-    return false;
+  if (expiryTime == null) {
+    return true;
   }
 
   return Date.now() >= expiryTime;
