@@ -47,7 +47,13 @@ const getTokenExpiryTime = (token: string) => {
   }
 };
 
+const isJwtToken = (token: string) => token.split(".").length === 3;
+
 const isTokenExpired = (token: string) => {
+  if (!isJwtToken(token)) {
+    return false;
+  }
+
   const expiryTime = getTokenExpiryTime(token);
   if (expiryTime == null) {
     return true;
